@@ -65,18 +65,19 @@ class DepartmentController extends Controller
     }
 
     public function destroy(Department $department)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        if ($department->users()->exists()) {
-            return redirect()->route('departments.index')->with('error', 'Cannot delete the department because it is associated with employees.');
-        }
-
-        $department->delete();
-
-        $log_entry = $user->name . $user->role . " deleted a department " . $department->name;
-        event(new UserLog($log_entry));
-
-        return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
+    if ($department->users()->exists()) {
+        return redirect()->route('departments.index')->with('error', 'Cannot delete the department because it is associated with employees.');
     }
+
+    $log_entry = $user->name . $user->role . " deleted a department " . $department->name;
+    event(new UserLog($log_entry));
+
+    $department->delete();
+
+    return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
+}
+
 }

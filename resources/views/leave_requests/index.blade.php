@@ -41,7 +41,7 @@
 window.addEventListener('load', hideMessages);
 </script>
 
-    <div class="container mx-auto py-3 flex space-x-4">
+    <div class="container mx-auto py-4 flex space-x-5">
         <div class="mb-4 relative">
             <select id="filterDropdown" class="block appearance-none bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <option disabled selected value="">Select Status</option>
@@ -59,7 +59,6 @@ window.addEventListener('load', hideMessages);
         <div class="mb-4 relative">
             <select id="filterMonthDropdown" class="block appearance-none bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <option disabled selected value="">Select Month</option>
-                <option value="{{ route('leave-requests.index') }}">All Requests</option>
                 <option value="{{ route('leave-requests.filter-by-month', ['month' => '01']) }}">January</option>
                 <option value="{{ route('leave-requests.filter-by-month', ['month' => '02']) }}">February</option>
                 <option value="{{ route('leave-requests.filter-by-month', ['month' => '03']) }}">March</option>

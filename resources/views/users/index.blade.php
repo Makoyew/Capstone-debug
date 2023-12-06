@@ -6,50 +6,74 @@
     </x-slot>
 
     @if(session('success'))
-    <div id="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
-        <div class="flex">
-            <div class="py-1">
-                <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <div>
-                {{ session('success') }}
-            </div>
-        </div>
-    </div>
-@endif
-
-@if(session('error'))
-    <div id="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-        <div class="flex">
-            <div class="py-1">
-                <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <div>
-                {{ session('error') }}
+        <div id="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
+            <div class="flex">
+                <div class="py-1">
+                    <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    {{ session('success') }}
+                </div>
             </div>
         </div>
-    </div>
-@endif
+    @endif
 
+    @if(session('error'))
+        <div id="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+            <div class="flex">
+                <div class="py-1">
+                    <svg class="w-6 h-6 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div>
+                    {{ session('error') }}
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-semibold text-gray-800">Users</h3>
-                    <div class="space-x-4">
-                        <a href="#" id="openCreateUserModal"
-                        class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Create User</a>
-
-                        <a href="{{ route('user_report') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Generate Report</a>
+                <div class="container bg-white px-1 py-1 rounded-md flex items-center justify-center space-x-4">
+                    <div class="relative">
+                        <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
+                            @csrf
+                            <div class="relative">
+                                <select
+                                    name="department_id"
+                                    id="department_id"
+                                    class="dropdown"
+                                >
+                                    <option value="">All Departments</option>
+                                    @foreach ($departments as $dept)
+                                        <option value="{{ $dept->id }}" @if($selectedDepartment && $selectedDepartment->id == $dept->id) selected @endif>{{ $dept->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3">Filter</button>
+                        </form>
                     </div>
-                </div>
 
-                <div class="mb-4 flex items-center space-x-4">
+                    <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
+                        @csrf
+                        <div class="relative">
+                            <select
+                                name="gender"
+                                id="gender"
+                                class="dropdown"
+                            >
+                                <option value="">All Genders</option>
+                                <option value="male" @if($selectedGender && $selectedGender == 'male') selected @endif>Male</option>
+                                <option value="female" @if($selectedGender && $selectedGender == 'female') selected @endif>Female</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3">Filter</button>
+                    </form>
+
                     <div class="relative">
                         <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
                             @csrf
@@ -71,44 +95,25 @@
                                 </button>
                             </div>
                         </form>
-
                     </div>
-
-                    @if (auth()->user()->role === 'admin')
-                        <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
-                            @csrf
-                            <div class="relative">
-                                <select
-                                    name="department_id"
-                                    id="department_id"
-                                    class="dropdown"
-                                >
-                                    <option value="">All Departments</option>
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $dept->id }}" @if($selectedDepartment && $selectedDepartment->id == $dept->id) selected @endif>{{ $dept->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3">Filter</button>
-                        </form>
-                    @endif
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <form action="{{ route('users.index') }}" method="GET" class="flex items-center">
-                    @csrf
-                    <div class="relative">
-                        <select
-                            name="gender"
-                            id="gender"
-                            class="dropdown"
-                        >
-                            <option value="">All Genders</option>
-                            <option value="male" @if($selectedGender && $selectedGender == 'male') selected @endif>Male</option>
-                            <option value="female" @if($selectedGender && $selectedGender == 'female') selected @endif>Female</option>
-                        </select>
+
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-semibold text-gray-800">Users</h3>
+                    <div class="space-x-4">
+                        <a href="#" id="openCreateUserModal"
+                        class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Create User</a>
+
+                        <a href="{{ route('user_report') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Generate Report</a>
                     </div>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3">Filter</button>
-                </form>
+                </div>
 
                 <div class="overflow-x-auto mt-6">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -194,7 +199,7 @@
     </div>
 
     <!-- Create User Modal -->
-<div id="createUserModal" class="fixed inset-0 z-50 hidden overflow-auto bg-gray-800 bg-opacity-50">
+<div id="createUserModal" class="fixed inset-0 z-50 hidden overflow-hidden bg-gray-800 bg-opacity-50">
     <div class="relative w-full max-w-md p-4 mx-auto mt-10">
         <div class="bg-white rounded-lg shadow-lg">
             <!-- Modal Header -->

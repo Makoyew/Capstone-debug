@@ -5,54 +5,55 @@
         </h2>
     </x-slot>
 
-    <div class="container">
+    <div class="container mt-4">
         <!-- Calendar Panel -->
-        <div class="panel panel-primary mt-2">
-            <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
                 <!-- Calendar Container -->
                 <div id='calendar'></div>
             </div>
         </div>
     </div>
 
-    <!-- Add Event Modal -->
-    <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="addEventModalLabel">Add Event</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="addEventForm">
-                        <div class="form-group">
-                            <label for="eventTitle">Event Title:</label>
-                            <input type="text" class="form-control" id="eventTitle" name="title" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventColor">Event Color:</label>
-                            <input type="text" class="form-control" id="eventColor" name="color" />
-                        </div>
-                        <div class="form-group">
-                            <label for="eventStart">Event Start Date:</label>
-                            <input type="text" class="form-control" id="eventStart" name="start" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventEnd">Event End Date:</label>
-                            <input type="text" class="form-control" id="eventEnd" name="end" required>
-                        </div>
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-primary">Add Event</button>
-                    </form>
-                </div>
+   <!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title" id="addEventModalLabel">Add Event</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addEventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title:</label>
+                        <input type="text" class="form-control" id="eventTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventColor">Event Color:</label>
+                        <input type="text" class="form-control" id="eventColor" name="color" />
+                    </div>
+                    <div class="form-group">
+                        <label for="eventStart">Event Start Date:</label>
+                        <input type="text" class="form-control datepicker" id="eventStart" name="start" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventEnd">Event End Date:</label>
+                        <input type="text" class="form-control datepicker" id="eventEnd" name="end" required>
+                    </div>
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary">Add Event</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Include FullCalendar and Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.1/fullcalendar.min.css" />
@@ -80,11 +81,7 @@
                 events: "{{ route('calendar') }}",
                 displayEventTime: false,
                 eventRender: function (event, element, view) {
-                    if (event.allDay === 'true' || event.allDay === true) {
-                        event.allDay = true;
-                    } else {
-                        event.allDay = false;
-                    }
+                    event.allDay = event.allDay === 'true' || event.allDay === true;
                 },
                 selectable: true,
                 selectHelper: true,
@@ -105,12 +102,9 @@
                         var action = prompt("Do you want to edit (e) or delete (d) this Event?");
 
                         if (action === 'e') {
-                            // Edit event title
                             var editTitle = prompt('Edit Event Title:', event.title);
                             if (editTitle !== null) {
-                                // Update the event title
                                 event.title = editTitle;
-                                // Send the updated data to the server
                                 $.ajax({
                                     type: "POST",
                                     url: "{{ route('updateevent') }}",
@@ -128,7 +122,6 @@
                         } else if (action === 'd') {
                             var deleteMsg = confirm("Do you really want to delete this Event?");
                             if (deleteMsg) {
-                                // Send the delete request to the server
                                 $.ajax({
                                     type: "POST",
                                     url: "{{ route('deleteevent') }}",
@@ -149,7 +142,7 @@
             });
 
             // Initialize Datepicker for start and end dates in the modal
-            $('#eventStart, #eventEnd').datepicker({
+            $('.datepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
             });
@@ -181,22 +174,45 @@
         });
     </script>
 
-    <style>
-        /* Example modal styling */
-        .modal {
-            max-height: 80%; /* Adjust as needed */
-        }
+<style>
+    /* Improved modal styling */
+    .modal-header {
+        background-color: #007bff;
+        color: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 15px;
+    }
 
+    .modal-body {
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive styling */
+    @media (max-width: 576px) {
         .modal-body {
-            max-height: calc(100vh - 200px); /* Adjust as needed */
-            overflow-y: auto;
+            max-height: calc(100vh - 120px);
         }
+    }
 
-        /* Responsive styling */
-        @media (max-width: 576px) {
-            .modal-body {
-                max-height: calc(100vh - 120px);
-            }
-        }
-    </style>
+    /* Improved card styling */
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+</style>
+
+
 </x-app-layout>

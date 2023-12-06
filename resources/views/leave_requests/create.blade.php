@@ -26,7 +26,7 @@
                         <option value="maternity">Maternity Leave</option>
                         <option value="paternity">Paternity Leave</option>
                         <option value="educational">Educational Leave</option>
-                        <option value="other">Other</option>
+                        <option value="other">Others Please Specify</option>
                     </select>
                 </div>
 
