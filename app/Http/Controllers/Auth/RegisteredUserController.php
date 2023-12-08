@@ -28,8 +28,10 @@ class RegisteredUserController extends Controller
     $query = Log::query();
 
     if ($date) {
-        $query->whereDate('login_time', $date)
-              ->orWhereDate('logout_time', $date);
+        $query->where(function ($query) use ($date) {
+            $query->whereDate('login_time', $date)
+                  ->orWhereDate('logout_time', $date);
+        });
     }
 
     if ($firstName) {
@@ -40,8 +42,12 @@ class RegisteredUserController extends Controller
 
     $logs = $query->orderBy('created_at', 'desc')->paginate(5);
 
+    // Append the filter parameters to the pagination links
+    $logs->appends(['date' => $date, 'first_name' => $firstName]);
+
     return view('logs.index', compact('logs'));
 }
+
 
     /**
      * Display the registration view.
@@ -127,7 +133,7 @@ class RegisteredUserController extends Controller
 {
     $departments = Department::all();
     $search = $request->input('search');
-    $selectedDepartmentId = $request->input('department_id'); // Get the selected department ID
+    $selectedDepartmentId = $request->input('department_id');
     $selectedGender = $request->input('gender');
 
     $users = User::query();
@@ -135,21 +141,21 @@ class RegisteredUserController extends Controller
     if ($search) {
         $users->where(function ($query) use ($search) {
             $query->where('surname', 'like', '%' . $search . '%')
-                  ->orWhere('first_name', 'like', '%' . $search . '%');
+                ->orWhere('first_name', 'like', '%' . $search . '%');
         });
     }
 
     if ($selectedDepartmentId) {
-        $users->where('department_id', $selectedDepartmentId); // Filter by selected department
+        $users->where('department_id', $selectedDepartmentId);
     }
 
     if ($selectedGender) {
-        $users->where('gender', $selectedGender); // Filter by selected gender
+        $users->where('gender', $selectedGender);
     }
 
-    $users = $users->paginate(10);
+    $users = $users->paginate(5);
 
-    $header = 'Users'; // Set the header title
+    $header = 'Users';
 
     // Check if no users were found
     if ($users->isEmpty()) {
@@ -159,66 +165,73 @@ class RegisteredUserController extends Controller
     // Retrieve the selected department (if it exists)
     $selectedDepartment = Department::find($selectedDepartmentId);
 
+    // Pass additional data to the view for pagination links
+    $users->appends([
+        'search' => $search,
+        'department_id' => $selectedDepartmentId,
+        'gender' => $selectedGender,
+    ]);
+
     return view('users.index', compact('users', 'header', 'departments', 'selectedDepartment', 'selectedGender'));
 }
 
 
 
 
-public function show(User $user)
+    public function show(User $user)
+        {
+
+            return view('users.show', compact('user'));
+        }
+
+    public function edit(User $user)
     {
 
-        return view('users.show', compact('user'));
+        $departments = Department::all();
+        return view('users.edit', compact('user', 'departments'));
     }
 
-public function edit(User $user)
-{
-
-    $departments = Department::all();
-    return view('users.edit', compact('user', 'departments'));
-}
-
-public function update(Request $request, User $user)
-{
-    // Validate form data, including profile_picture field.
-    $request->validate([
-        'surname' => ['required', 'string', 'max:255'],
-        'first_name' => ['required', 'string', 'max:255'],
-        'middle_name' => ['nullable', 'string', 'max:255'],
-        'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-        'role' => 'required|string|in:admin,employee,supervisor',
-        'gender' => 'nullable|in:male,female,other',
-        'date_of_birth' => 'nullable|date',
-        'department' => ['nullable', 'string', 'max:255'],
-        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed.
-        'civil_status' => ['nullable', 'string', 'in:single,married,separated,widowed'],
-        'height' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
-        'weight' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
-        'blood_type' => ['nullable', 'string', 'max:255'],
-        'sss_id_no' => ['nullable', 'string', 'max:255'],
-        'pag_ibig_id_no' => ['nullable', 'string', 'max:255'],
-        'philhealth_no' => ['nullable', 'string', 'max:255'],
-        'tin_no' => ['nullable', 'string', 'max:255'],
-        'mdc_id' => ['nullable', 'string', 'max:255'],
-        'place_of_birth' => ['nullable', 'string', 'max:255'],
-        'residential_house_no' => 'nullable|string|max:255',
-        'residential_street' => 'nullable|string|max:255',
-        'residential_subdivision' => 'nullable|string|max:255',
-        'residential_barangay' => 'nullable|string|max:255',
-        'residential_city' => 'nullable|string|max:255',
-        'residential_province' => 'nullable|string|max:255',
-        'residential_zip_code' => 'nullable|string|max:10',
-        'permanent_house_no' => 'nullable|string|max:255',
-        'permanent_street' => 'nullable|string|max:255',
-        'permanent_subdivision' => 'nullable|string|max:255',
-        'permanent_barangay' => 'nullable|string|max:255',
-        'permanent_city' => 'nullable|string|max:255',
-        'permanent_province' => 'nullable|string|max:255',
-        'permanent_zip_code' => 'nullable|string|max:10',
-        'telephone_number' => 'nullable|string|max:20',
-        'mobile_number' => 'nullable|string|max:20',
-        'messenger_account' => 'nullable|string|max:255',
-        'elementary_school' => 'nullable|string|max:255',
+    public function update(Request $request, User $user)
+    {
+        // Validate form data, including profile_picture field.
+        $request->validate([
+            'surname' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'role' => 'required|string|in:admin,employee,supervisor',
+            'gender' => 'nullable|in:male,female,other',
+            'date_of_birth' => 'nullable|date',
+            'department' => ['nullable', 'string', 'max:255'],
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed.
+            'civil_status' => ['nullable', 'string', 'in:single,married,separated,widowed'],
+            'height' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
+            'weight' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
+            'blood_type' => ['nullable', 'string', 'max:255'],
+            'sss_id_no' => ['nullable', 'string', 'max:255'],
+            'pag_ibig_id_no' => ['nullable', 'string', 'max:255'],
+            'philhealth_no' => ['nullable', 'string', 'max:255'],
+            'tin_no' => ['nullable', 'string', 'max:255'],
+            'mdc_id' => ['nullable', 'string', 'max:255'],
+            'place_of_birth' => ['nullable', 'string', 'max:255'],
+            'residential_house_no' => 'nullable|string|max:255',
+            'residential_street' => 'nullable|string|max:255',
+            'residential_subdivision' => 'nullable|string|max:255',
+            'residential_barangay' => 'nullable|string|max:255',
+            'residential_city' => 'nullable|string|max:255',
+            'residential_province' => 'nullable|string|max:255',
+            'residential_zip_code' => 'nullable|string|max:10',
+            'permanent_house_no' => 'nullable|string|max:255',
+            'permanent_street' => 'nullable|string|max:255',
+            'permanent_subdivision' => 'nullable|string|max:255',
+            'permanent_barangay' => 'nullable|string|max:255',
+            'permanent_city' => 'nullable|string|max:255',
+            'permanent_province' => 'nullable|string|max:255',
+            'permanent_zip_code' => 'nullable|string|max:10',
+            'telephone_number' => 'nullable|string|max:20',
+            'mobile_number' => 'nullable|string|max:20',
+            'messenger_account' => 'nullable|string|max:255',
+            'elementary_school' => 'nullable|string|max:255',
             'elementary_degree' => 'nullable|string|max:255',
             'elementary_attendance_from' => 'nullable|date',
             'elementary_attendance_to' => 'nullable|date|after:elementary_attendance_from',
@@ -260,45 +273,44 @@ public function update(Request $request, User $user)
             'date' => 'nullable|date',
     ]);
 
-    // Handle profile picture upload.
-    if ($request->hasFile('profile_picture')) {
-        // Delete the old profile picture if it exists.
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
+        // Handle profile picture upload.
+        if ($request->hasFile('profile_picture')) {
+            // Delete the old profile picture if it exists.
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+
+            // Store the new profile picture.
+            $imagePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $imagePath; // Update the user's profile_picture field.
         }
 
-        // Store the new profile picture.
-        $imagePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-        $user->profile_picture = $imagePath; // Update the user's profile_picture field.
+        if ($request->has('department')) {
+            $department = Department::where('name', $request->input('department'))->first();
+            $user->department()->associate($department);
+        }
+
+        // Update other user information.
+        $user->update(array_merge(
+            $request->except('profile_picture', 'department'),
+            ['department_id' => Department::where('name', $request->input('department'))->first()->id]
+        ));
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
-    if ($request->has('department')) {
-        $department = Department::where('name', $request->input('department'))->first();
-        $user->department()->associate($department);
+
+
+    public function destroy($user_id)
+    {
+
+
+        $user = User::findOrFail($user_id);
+
+        $user->logs()->delete();
+        $user->delete();
+        return redirect()->route('users.index')->with('error', 'User deleted successfully.');
     }
-
-    // Update other user information.
-    $user->update(array_merge(
-        $request->except('profile_picture', 'department'),
-        ['department_id' => Department::where('name', $request->input('department'))->first()->id]
-    ));
-
-    return redirect()->route('users.index')->with('success', 'User updated successfully.');
-}
-
-
-
-public function destroy($user_id)
-{
-
-
-    $user = User::findOrFail($user_id);
-
-    // Delete associated log records (this will trigger cascading delete)
-    $user->logs()->delete();
-    $user->delete();
-    return redirect()->route('users.index')->with('error', 'User deleted successfully.');
-}
 
 
 }

@@ -16,7 +16,8 @@ class EvaluationController extends Controller
 
     // Retrieve only users in the same department as the supervisor, excluding the supervisor
     $users = User::where('department_id', $supervisor->department_id)
-        ->where('id', '!=', $supervisor->id) // Exclude the supervisor
+        ->where('id', '!=', $supervisor->id)
+        ->where('role', 'employee')
         ->get();
 
     return view('evaluations.index', compact('users'));

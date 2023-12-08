@@ -1,19 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Edit User') }}
         </h2>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-9xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+        <div class="mx-auto max-w-9xl sm:px-6 lg:px-8">
+            <div class="flex justify-left">
+                <a href="{{ route('users.index') }}" class="px-4 py-2 font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600">
+                    Back
+                </a>
+            </div>
+            <div class="p-6 mt-3 overflow-hidden bg-white shadow-xl sm:rounded-lg">
                 <form method="post" action="{{ route('users.update', $user) }}" enctype="multipart/form-data">
                     @csrf
                     @method('put')
-                    <div class="grid grid-cols-2 sm:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-2 gap-8 sm:grid-cols-2">
                         <div>
-                            <h3 class="text-lg font-medium text-gray-700 mb-2">PERSONAL INFORMATION</h3>
+                            <h3 class="mb-2 text-lg font-medium text-gray-700">PERSONAL INFORMATION</h3>
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Surname -->
                                 <div>
@@ -84,7 +89,7 @@
 
                         <!-- Contact Information -->
                         <div>
-                            <h3 class="text-lg font-medium text-gray-700 mb-2">CONTACT INFORMATION</h3>
+                            <h3 class="mb-2 text-lg font-medium text-gray-700">CONTACT INFORMATION</h3>
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Height -->
                                 <div>
@@ -142,7 +147,7 @@
 
                     <!-- Residential Address -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">RESIDENTIAL ADDRESS</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">RESIDENTIAL ADDRESS</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <!-- House/Block/Lot No. -->
                             <div>
@@ -184,7 +189,7 @@
 
                     <!-- Permanent Address -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">PERMANENT ADDRESS</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">PERMANENT ADDRESS</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <!-- House/Block/Lot No. -->
                             <div>
@@ -224,25 +229,25 @@
 
                             <!-- Telephone Number -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">TELEPHONE NO.</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">TELEPHONE NO.</h3>
                         <input type="text" id="telephone_number" name="telephone_number" value="{{ old('telephone_number', $user->telephone_number) }}" class="form-input">
                     </div>
 
                     <!-- Mobile Number -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">MOBILE NO.</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">MOBILE NO.</h3>
                         <input type="text" id="mobile_number" name="mobile_number" value="{{ old('mobile_number', $user->mobile_number) }}" class="form-input">
                     </div>
 
                     <!-- Messenger Account -->
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">MESSENGER ACCT.</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">MESSENGER ACCT.</h3>
                         <input type="text" id="messenger_account" name="messenger_account" value="{{ old('messenger_account', $user->messenger_account) }}" class="form-input">
                     </div>
 
                     <!-- Spouse Information -->
                     <div>
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">SPOUSE INFORMATION</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">SPOUSE INFORMATION</h3>
                         <!-- Spouse Surname -->
                         <div>
                             <label for="spouse_surname" class="form-label">Spouse Surname:</label>
@@ -287,10 +292,10 @@
 
                     <!-- Parents Information -->
                     <div>
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">PARENTS INFORMATION</h3>
+                        <h3 class="mb-2 text-lg font-medium text-gray-700">PARENTS INFORMATION</h3>
                         <!-- Father Information -->
                         <div>
-                            <h4 class="text-md font-medium text-gray-700 mb-1">Father's Information</h4>
+                            <h4 class="mb-1 font-medium text-gray-700 text-md">Father's Information</h4>
                             <!-- Father Surname -->
                             <div>
                                 <label for="father_surname" class="form-label">Father Surname:</label>
@@ -314,7 +319,7 @@
                         </div>
                         <!-- Mother Information -->
                         <div>
-                            <h4 class="text-md font-medium text-gray-700 mb-1">Mother's Information</h4>
+                            <h4 class="mb-1 font-medium text-gray-700 text-md">Mother's Information</h4>
 
                             <!-- Mother Surname -->
                             <div>
@@ -340,49 +345,49 @@
                     <table class="w-full text-sm text-gray-500 border border-gray-300">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="py-3 px-6 border-b">LEVEL</th>
-                                <th scope="col" class="py-3 px-6 border-b">NAME OF SCHOOL (Write in full)</th>
-                                <th scope="col" class="py-3 px-6 border-b">BASIC EDUCATION/DEGREE/COURSE (Write in full)</th>
-                                <th scope="col" class="py-3 px-6 border-b">PERIOD OF ATTENDANCE</th>
-                                <th scope="col" class="py-3 px-6 border-b">HIGHEST LEVEL/UNITS EARNED (if not graduated)</th>
-                                <th scope="col" class="py-3 px-6 border-b">YEAR GRADUATED</th>
-                                <th scope="col" class="py-3 px-6 border-b">SCHOLARSHIP/ACADEMIC HONORS RECEIVED</th>
+                                <th scope="col" class="px-6 py-3 border-b">LEVEL</th>
+                                <th scope="col" class="px-6 py-3 border-b">NAME OF SCHOOL (Write in full)</th>
+                                <th scope="col" class="px-6 py-3 border-b">BASIC EDUCATION/DEGREE/COURSE (Write in full)</th>
+                                <th scope="col" class="px-6 py-3 border-b">PERIOD OF ATTENDANCE</th>
+                                <th scope="col" class="px-6 py-3 border-b">HIGHEST LEVEL/UNITS EARNED (if not graduated)</th>
+                                <th scope="col" class="px-6 py-3 border-b">YEAR GRADUATED</th>
+                                <th scope="col" class="px-6 py-3 border-b">SCHOLARSHIP/ACADEMIC HONORS RECEIVED</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach(['elementary', 'secondary', 'vocational', 'college', 'graduate'] as $level)
                                 <tr class="bg-white border-b">
-                                    <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">{{ strtoupper($level) }}</th>
-                                    <td class="py-4 px-2">
-                                        <input type="text" name="{{ $level }}_school" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old($level . '_school', $user->{$level . '_school'}) }}">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ strtoupper($level) }}</th>
+                                    <td class="px-2 py-4">
+                                        <input type="text" name="{{ $level }}_school" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old($level . '_school', $user->{$level . '_school'}) }}">
                                     </td>
-                                    <td class="py-4 px-6">
-                                        <input type="text" name="{{ $level }}_degree" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old($level . '_degree', $user->{$level . '_degree'}) }}">
+                                    <td class="px-6 py-4">
+                                        <input type="text" name="{{ $level }}_degree" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old($level . '_degree', $user->{$level . '_degree'}) }}">
                                     </td>
-                                    <td class="py-4 px-6">
+                                    <td class="px-6 py-4">
                                         <div class="flex">
-                                            <input type="date" name="{{ $level }}_attendance_from" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" placeholder="from" value="{{ old($level . '_attendance_from', $user->{$level . '_attendance_from'}) }}">
+                                            <input type="date" name="{{ $level }}_attendance_from" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" placeholder="from" value="{{ old($level . '_attendance_from', $user->{$level . '_attendance_from'}) }}">
                                             <span class="mx-2">-</span>
-                                            <input type="date" name="{{ $level }}_attendance_to" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" placeholder="to" value="{{ old($level . '_attendance_to', $user->{$level . '_attendance_to'}) }}">
+                                            <input type="date" name="{{ $level }}_attendance_to" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" placeholder="to" value="{{ old($level . '_attendance_to', $user->{$level . '_attendance_to'}) }}">
                                         </div>
                                     </td>
-                                    <td class="py-4 px-6">
-                                        <input type="text" name="{{ $level }}_highest_level" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old($level . '_highest_level', $user->{$level . '_highest_level'}) }}">
+                                    <td class="px-6 py-4">
+                                        <input type="text" name="{{ $level }}_highest_level" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old($level . '_highest_level', $user->{$level . '_highest_level'}) }}">
                                     </td>
-                                    <td class="py-4 px-6">
-                                        <input type="date" name="{{ $level }}_year_graduated" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old($level . '_year_graduated', $user->{$level . '_year_graduated'}) }}">
+                                    <td class="px-6 py-4">
+                                        <input type="date" name="{{ $level }}_year_graduated" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old($level . '_year_graduated', $user->{$level . '_year_graduated'}) }}">
                                     </td>
-                                    <td class="py-4 px-6">
-                                        <input type="text" name="{{ $level }}_honors" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old($level . '_honors', $user->{$level . '_honors'}) }}">
+                                    <td class="px-6 py-4">
+                                        <input type="text" name="{{ $level }}_honors" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old($level . '_honors', $user->{$level . '_honors'}) }}">
                                     </td>
                                 </tr>
                             @endforeach
                             <tr class="bg-white">
-                                <td colspan="7" class="text-right italic py-4 px-6 border-t">
-                                    <div class="mt-4 flex justify-between items-center">
+                                <td colspan="7" class="px-6 py-4 italic text-right border-t">
+                                    <div class="flex items-center justify-between mt-4">
                                         <div>
                                             <label for="date" class="block text-sm font-medium text-gray-600">Date</label>
-                                            <input type="date" name="date" id="date" class="form-input border border-gray-300 rounded-md shadow-sm mt-1 block w-full" value="{{ old('date', $user->date) }}">
+                                            <input type="date" name="date" id="date" class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm form-input" value="{{ old('date', $user->date) }}">
                                         </div>
                                     </div>
                                 </td>
@@ -390,7 +395,7 @@
                         </tbody>
                     </table>
 
-                    <div class="mt-4">
+                    <div class="flex justify-end mt-4">
                         <button type="submit" class="btn btn-primary">Update User</button>
                     </div>
                 </form>
@@ -398,6 +403,7 @@
         </div>
     </div>
 </x-app-layout>
+
 <style scoped>
     /* public/css/styles.css */
 

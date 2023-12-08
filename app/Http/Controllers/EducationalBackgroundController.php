@@ -80,6 +80,6 @@ class EducationalBackgroundController extends Controller
         $user->update($validatedData);
 
         // Redirect to a success page or back to the form with a success message
-        return redirect()->route('dashboard')->with('success', 'Educational background submitted successfully!');
+        return redirect()->route('dashboard')->with('success', 'Personal Information updated successfully!');
     }
 }

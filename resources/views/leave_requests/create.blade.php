@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Request Leave') }}
         </h2>
     </x-slot>
 
     <div class="container mx-auto mt-6">
         <!-- Card Container -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-4">Create Leave Request</h2>
+        <div class="p-6 bg-white rounded-lg shadow-md">
+            <h2 class="mb-4 text-2xl font-semibold">Create Leave Request</h2>
 
             <form method="POST" action="{{ route('leave-requests.store') }}">
                 @csrf
@@ -16,8 +16,7 @@
                 <div class="mb-4">
                     <label for="leave_type" class="block text-sm font-medium text-gray-700">Leave Type:</label>
                     <select name="leave_type" id="leave_type" required
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" onchange="showAdditionalOptions(); toggleOtherInput();">
-                        <option value="" selected disabled>Select Leave Type</option>
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="showAdditionalOptions(); toggleOtherInput();">
                         <option value="vacation">Vacation Leave</option>
                         <option value="sick">Sick Leave</option>
                         <option value="personal">Personal Leave</option>
@@ -26,14 +25,14 @@
                         <option value="maternity">Maternity Leave</option>
                         <option value="paternity">Paternity Leave</option>
                         <option value="educational">Educational Leave</option>
-                        <option value="other">Others Please Specify</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
 
-                <div id="otherInput" class="mb-4 hidden">
+                <div id="otherInput" class="hidden mb-4">
                     <label for="other_leave_type" class="block text-sm font-medium text-gray-700">Other Leave Type:</label>
                     <input type="text" id="other_leave_type" name="other_leave_type"
-                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                           class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
                 <script>
@@ -55,18 +54,18 @@
                     <!-- Add your additional choices here -->
                     <label for="educational_reason" class="block text-sm font-medium text-gray-700">Educational Reason:</label>
                     <select name="educational_reason" id="educational_reason"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" onchange="showAdditionalOptions()">
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="showAdditionalOptions()">
                         <option value="Completion of Doctor's Degree">Completion of Doctor's Degree</option>
                         <option value="Completion of Master's Degree">Completion of Master's Degree</option>
                         <option value="Board Examination Review">Board Examination Review</option>
-                        <option value="other">Other</option> <!-- Added "Other" option -->
+                        <option value="other">Others Please Specify</option> <!-- Added "Other" option -->
                     </select>
 
                     <!-- Additional input field for "Other" option -->
                     <div id="otherEducationalReason" style="display: none;">
                         <label for="other_educational_reason" class="block text-sm font-medium text-gray-700">Specify Other Reason:</label>
                         <input type="text" id="other_educational_reason" name="other_educational_reason"
-                               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                               class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                 </div>
 
@@ -95,28 +94,28 @@
                     <!-- Initially hidden, will be shown only when "Sick" is selected -->
                     <label for="reason" class="block text-sm font-medium text-gray-700">Specific Type of Sick:</label>
                     <div class="mt-1">
-                        <input type="checkbox" name="reason[]" id="flu" value="Flu" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <input type="checkbox" name="reason[]" id="flu" value="Flu" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <label for="flu" class="ml-2 text-sm text-gray-700">Flu</label>
                     </div>
                     <div class="mt-1">
-                        <input type="checkbox" name="reason[]" id="cough" value="Cough" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <input type="checkbox" name="reason[]" id="cough" value="Cough" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <label for="cough" class="ml-2 text-sm text-gray-700">Cough</label>
                     </div>
                     <div class="mt-1">
-                        <input type="checkbox" name="reason[]" id="diarrhea" value="Diarrhea" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <input type="checkbox" name="reason[]" id="diarrhea" value="Diarrhea" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <label for="diarrhea" class="ml-2 text-sm text-gray-700">Diarrhea</label>
                     </div>
                     <div class="mt-1">
-                        <input type="checkbox" name="reason[]" id="headache" value="Headache" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <input type="checkbox" name="reason[]" id="headache" value="Headache" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <label for="headache" class="ml-2 text-sm text-gray-700">Headache</label>
                     </div>
                     <div class="mt-1">
-                        <input type="checkbox" name="reason" id="other" value="other" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <input type="checkbox" name="reason" id="other" value="other" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <label for="other" class="ml-2 text-sm text-gray-700">other</label>
                     </div>
                     <div class="mt-1" id="custom-reason-container" style="display: none;">
                         <label for="custom_reason" class="block text-sm font-medium text-gray-700">Custom Reason:</label>
-                        <input type="text" name="reason[]" id="custom_reason" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                        <input type="text" name="reason[]" id="custom_reason" class="block w-full mt-1 rounded-md shadow-sm form-input" />
                     </div>
                 </div>
 
@@ -161,25 +160,25 @@
                 <div class="mb-4">
                     <label for="other_reason" class="block text-sm font-medium text-gray-700">Reason for Leave:</label>
                     <input type="text" name="other_reason" id="other_reason"
-                           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                           class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2">
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date:</label>
                         <input type="date" name="start_date" id="start_date"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"  min="{{ now()->format('Y-m-d') }}" required>
                     </div>
                     <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700">End Date:</label>
                         <input type="date" name="end_date" id="end_date"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"  min="{{ now()->format('Y-m-d') }}" required>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label for="number_of_days" class="block text-sm font-medium text-gray-700">Number of Days:</label>
-                    <input type="text" id="number_of_days" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly>
+                    <input type="text" id="number_of_days" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
                 </div>
 
                 <script>
@@ -204,7 +203,12 @@
                         }
 
                         // Event listeners for date inputs
-                        startDateInput.addEventListener("change", updateNumberOfDays);
+                        startDateInput.addEventListener("change", function () {
+                            // Ensure end date cannot be earlier than the start date
+                            endDateInput.min = startDateInput.value;
+                            updateNumberOfDays();
+                        });
+
                         endDateInput.addEventListener("change", updateNumberOfDays);
 
                         // Trigger change event to set the initial state
@@ -217,7 +221,7 @@
 
                 <div class="flex items-center justify-end">
                     <button type="submit"
-                        class="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="px-4 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Submit Leave Request
                     </button>
                 </div>

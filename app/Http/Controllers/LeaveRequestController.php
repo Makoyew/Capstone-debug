@@ -14,8 +14,9 @@ use App\Notifications\LeaveRequestRejected;
 use App\Notifications\LeaveRequestCreated;
 use App\Notifications\SupervisorApprovedLeaveRequest;
 use App\Notifications\LeaveRequestEndedNotification;
-use App\Events\UserLog;
-use App\Listeners\LogListener;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class LeaveRequestController extends Controller
 {
@@ -65,7 +66,7 @@ class LeaveRequestController extends Controller
     $pendingRequest = $user->leaveRequests()->whereIn('status', ['pending_supervisor', 'recommend_for_approval'])->exists();
 
     if ($pendingRequest) {
-        return redirect()->route('dashboard')->with('error', 'You have an existing pending leave request. You cannot submit another one until it is resolved.');
+        return redirect()->route('dashboard')->with('error', 'You have a pending or approved leave request. You cannot submit another one until it is resolved.');
     }
 
     $request->validate([
@@ -79,10 +80,7 @@ class LeaveRequestController extends Controller
 
     $reason = implode(', ', $request->input('reason'));
 
-    $startDate = new \DateTime($request->input('start_date'));
-    $endDate = new \DateTime($request->input('end_date'));
-    $interval = $startDate->diff($endDate);
-    $number_of_days = $interval->format('%a') + 1;
+
     $educationalReason = $request->input('educational_reason');
 
     if ($educationalReason === 'other') {
@@ -92,8 +90,18 @@ class LeaveRequestController extends Controller
         $educationalReason = $request->input('other_educational_reason');
     }
 
+    $leaveType = $request->input('leave_type');
+if ($leaveType === 'other') {
+    $leaveType = $request->input('other_leave_type');
+}
 
-    $leaveRequest = LeaveRequest::create([
+    $startDate = new \DateTime($request->input('start_date'));
+    $endDate = new \DateTime($request->input('end_date'));
+    $interval = $startDate->diff($endDate);
+    $number_of_days = $interval->format('%a') + 1;
+
+
+    LeaveRequest::create([
         'user_id' => $user->id,
         'start_date' => $request->input('start_date'),
         'end_date' => $request->input('end_date'),
@@ -101,7 +109,7 @@ class LeaveRequestController extends Controller
         'educational_reason' => $educationalReason,
         'other_reason' => $request->input('other_reason'),
         'status' => 'pending_supervisor',
-        'leave_type' => $request->input('leave_type'),
+        'leave_type' => $leaveType,
         'number_of_days' => $number_of_days,
     ]);
 
@@ -117,11 +125,11 @@ class LeaveRequestController extends Controller
         }
     }
 
-    $log_entry = Auth::user()->name . $leaveRequest->user->first_name . " " . $leaveRequest->user->surname . " added a new leave request ";
-    event(new UserLog($log_entry));
-
     return redirect()->route('dashboard')->with('success', 'Leave request submitted successfully.');
 }
+
+
+
 
     public function show(LeaveRequest $leaveRequest)
 {
@@ -260,19 +268,20 @@ public function destroy(LeaveRequest $leaveRequest)
     }
 
     public function filterByMonthRecords(Request $request, $user, $month)
-    {
-        $user = User::find($user);
+{
+    // Assuming you have a method to fetch the user, replace this with your logic
+    $user = User::find($user);
 
-        $leaveRequests = LeaveRequest::where('user_id', $user->id)
-            ->whereMonth('start_date', $month)
-            ->paginate(10);
+    $leaveRequests = LeaveRequest::where('user_id', $user->id)
+        ->whereMonth('start_date', $month)
+        ->paginate(10);
 
-            return view('users.records', [
-                'user' => $user,
-                'leaveRequests' => $leaveRequests,
-                'filterLeaveType' => $request->input('leaveTypeFilter', 'all'), // Default to 'all' if not provided
-            ]);
-    }
+        return view('users.records', [
+            'user' => $user,
+            'leaveRequests' => $leaveRequests,
+            'filterLeaveType' => $request->input('leaveTypeFilter', 'all'), // Default to 'all' if not provided
+        ]);
+}
 
 
     public function showUserLeaveRequests(User $user, Request $request)

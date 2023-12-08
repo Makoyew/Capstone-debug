@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Employee Profile') }}
         </h2>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <form method="post" action="{{ route('profile-show', $user) }}" enctype="multipart/form-data" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="p-6 overflow-hidden bg-white shadow-xl sm:rounded-lg">
+                <form method="post" action="{{ route('profile-show', $user) }}" enctype="multipart/form-data" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     @csrf
                     @method('put')
 
@@ -152,8 +152,7 @@
                         <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
                         <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
                     </div>
-
-                    <div class="btn-container">
+                    <div class="flex justify-end btn-container">
                         <button type="submit"
                             class="btn-save">
                             Next
@@ -195,4 +194,5 @@
         cursor: pointer;
 
     }
+
 </style>

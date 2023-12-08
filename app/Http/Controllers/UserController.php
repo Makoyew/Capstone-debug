@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\LeaveRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Department;
-use Illuminate\Support\Facades\Storage; // Import the Storage facade.
-use App\Models\User;
-use Illuminate\Support\Facades\Response;
-use PDF;
-
+use Illuminate\Support\Facades\Session;
+use App\Notifications\LeaveRequestAccepted;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\LeaveRequestRejected;
+use App\Notifications\LeaveRequestCreated;
+use App\Notifications\SupervisorApprovedLeaveRequest;
+use App\Notifications\LeaveRequestEndedNotification;
+use PDF; // Add this import for PDF generation
+use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     public function show()
@@ -93,30 +99,14 @@ class UserController extends Controller
         return redirect()->route('additional_fields')->with('success', 'Profile information updated successfully.');
     }
 
-    public function generate()
-{
-    // Generate the report content here, for example, using Laravel PDF.
-    // Replace this with your report generation logic.
+    public function showAdditionalFields()
+    {
+        $user = auth()->user(); // Get the authenticated user.
+        return view('additional_fields', compact('user'));
+    }
 
-    $users = User::all();
-
-    $pdf = PDF::loadView('reports.user_report', compact('users'));
-
-    // Save the generated PDF to storage.
-    Storage::disk('public')->put('reports/user_report.pdf', $pdf->output());
-
-    // Provide a link to download the generated report.
-    return response()->download(storage_path('app/public/reports/user_report.pdf'))->deleteFileAfterSend(true);
-}
-
-public function showAdditionalFields()
-{
-    $user = auth()->user(); // Get the authenticated user.
-    return view('additional_fields', compact('user'));
-}
-
-public function updateAdditionalFields(Request $request)
-{
+    public function updateAdditionalFields(Request $request)
+    {
     $user = auth()->user();
 
     $validatedData = $request->validate([
@@ -158,5 +148,23 @@ public function updateAdditionalFields(Request $request)
 
     return redirect()->route('educational_background')->with('success', 'Additional fields updated successfully');
 }
+
+public function generateReport(User $user)
+{
+    // Fetch leave requests for the selected user using the relationship
+    $leaveRequests = $user->leaveRequests;
+
+    // Generate the report content using Laravel PDF
+    $pdf = PDF::loadView('reports.user_report', compact('user', 'leaveRequests'));
+
+    // Save the generated PDF to storage
+    $pdfPath = "reports/user_report_{$user->id}.pdf";
+    Storage::disk('public')->put($pdfPath, $pdf->output());
+
+    // Provide a link to download the generated report
+    return response()->download(storage_path("app/public/{$pdfPath}"))->deleteFileAfterSend(true);
+}
+
+
 
 }

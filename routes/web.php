@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/employee-users', [EmployeeController::class, 'showEmployeeDepartmentUsers'])->middleware('role:admin,supervisor')->name('employee-users.index');
-    Route::delete('/user/delete/{id}', [EmployeeController::class, 'deleteUser'])->middleware('role:admin')->name('user.delete');
+    Route::delete('/user/delete/{id}', [EmployeeController::class, 'destroy'])->middleware('role:admin')->name('employee-users.delete');
 });
 
 Route::middleware('auth', 'supervisor')->group(function () {
@@ -96,7 +96,6 @@ Route::middleware('auth',)->group(function () {
     Route::get('profile-show', [UserController::class, 'show'])->name('profile-show');
     Route::post('profile-show', [UserController::class, 'updateProfilePicture'])->name('profile-show');
     Route::put('profile-show', [UserController::class, 'update'])->name('profile-show');
-    Route::get('/user_report', [UserController::class, 'generate'])->name('user_report');
     Route::get('/additional_fields', [UserController::class, 'showAdditionalFields'])->name('additional_fields');
     Route::post('/update-additional-fields', [UserController::class, 'updateAdditionalFields'])->name('update-additional-fields');
 });
@@ -131,6 +130,10 @@ Route::get('/users/{user}', [RegisteredUserController::class, 'show'])->name('us
 Route::get('/users', [RegisteredUserController::class, 'index'])->name('users.index');
 
 Route::get('/logs', [RegisteredUserController::class, 'showLogs'])->name('logs.index');
+
+Route::get('/user_report/{user}', [UserController::class, 'generateReport'])->name('generate.report');
+
+
 });
 
 Route::get('/buttons/text', function () {

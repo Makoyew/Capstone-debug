@@ -15,23 +15,43 @@
     </x-sidebar.link>
 
 
-
-
-    <x-sidebar.link
-        title="Request Leave"
-        href="{{ route('leave-requests.create') }}"
-        :isActive="request()->routeIs('leave-requests.create')"
-    >
-        <x-slot name="icon">
-            <x-icons.airplane class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
-        </x-slot>
-    </x-sidebar.link>
-
     @php
-        $user = auth()->user();
+    $user = auth()->user();
     @endphp
 
-    @if ($user && $user->role === 'admin' || $user && $user->role === 'supervisor')
+    @if ($user && $user->role === 'admin')
+      <x-sidebar.link
+            title="Departments"
+            href="{{ route('departments.index') }}"
+            :isactive="request()->routeIs('departments.index.*')"
+        >
+        <x-slot name="icon">
+            <x-icons.list class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+        </x-slot>
+    </x-sidebar.link>
+    @endif
+
+    @php
+    $user = auth()->user();
+    @endphp
+
+    @if ($user && $user->role === 'admin')
+      <x-sidebar.link
+            title="User Management"
+            href="{{ route('users.index') }}"
+            :isactive="request()->routeIs('users.index.*')"
+        >
+        <x-slot name="icon">
+            <x-icons.list class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+        </x-slot>
+    </x-sidebar.link>
+    @endif
+
+    @php
+    $user = auth()->user();
+    @endphp
+
+    @if ($user && $user->role === 'supervisor')
     <x-sidebar.link
         title="List of Employees"
         href="{{ route('employee-users.index') }}"
@@ -44,32 +64,15 @@
     @endif
 
 
-
-    @php
-        $user = auth()->user();
-    @endphp
-
-    @if ($user && $user->role === 'admin')
-    <x-sidebar.dropdown
-        title="Manage Users"
-        :active="Str::startsWith(request()->route()->uri(), 'index')"
+    <x-sidebar.link
+        title="Request Leave"
+        href="{{ route('leave-requests.create') }}"
+        :isActive="request()->routeIs('leave-requests.create')"
     >
         <x-slot name="icon">
-            <x-heroicon-o-view-grid class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+            <x-icons.airplane class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
         </x-slot>
-
-        <x-sidebar.sublink
-            title="Users"
-            href="{{ route('users.index') }}"
-            :active="request()->routeIs('users.index.*')"
-        />
-        <x-sidebar.sublink
-            title="Departments"
-            href="{{ route('departments.index') }}"
-            :active="request()->routeIs('departments.index')"
-        />
-    </x-sidebar.dropdown>
-    @endif
+    </x-sidebar.link>
 
     @php
         $user = auth()->user();
@@ -113,6 +116,22 @@
         <x-icons.records class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
     </x-slot>
     </x-sidebar.link>
+
+    @php
+    $user = auth()->user();
+    @endphp
+
+    @if ($user && $user->role === 'admin')
+        <x-sidebar.link
+            title="History"
+            href=""
+            :isActive="request()->routeIs('logs.index')"
+        >
+            <x-slot name="icon">
+                <x-icons.records class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+            </x-slot>
+        </x-sidebar.link>
+    @endif
 
     @php
     $user = auth()->user();
